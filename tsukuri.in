@@ -1022,12 +1022,14 @@ tsukuri_emerge() {
 		fi
 	done
 
-	msg 'Emerging following packages:'
-	echo;
-	for i in $array; do
-		printf " [\e[0;31mEM\e[0m] $i "
-	done
-	echo; echo
+	if [ "$(echo $array | wc -w)" -gt "1" ]; then
+		msg 'Emerging following packages:'
+		echo;
+		for i in $array; do
+			printf " [\e[0;31mEM\e[0m] $i "
+		done
+		echo; echo
+	fi
 
 	msg "Resolving dependencies"
 	for i in $array; do
@@ -1039,12 +1041,14 @@ tsukuri_emerge() {
 		fi	
 	done
 
-	msg "Overall transaction: "
-	echo;
-	for i in $deps; do
-		printf " [\e[0;31mEM\e[0m] $i "
-	done
-	echo; echo
+	if [ "$(echo $deps | wc -w)" -gt "1" ]; then
+		msg "Overall transaction: "
+		echo;
+		for i in $deps; do
+			printf " [\e[0;31mEM\e[0m] $i "
+		done
+		echo; echo
+	fi
 
 	for i in $deps; do
 		pushd "$(get_portdir $i)"
