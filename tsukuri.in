@@ -831,7 +831,9 @@ tsukuri_install() {
 
 	provides="$(archive_file_stdout "$pkg" ".PKGINFO" | grep -w 'provides =' | sed 's/provides = //' | tr '\n' ' ')"
 	[ -n "$provides" ] && {
-		for i in $provides; do ln -sf "$name" "$rootdir/usr/lib/tsukuri/db/$i"; done
+		for i in $provides; do
+			[ ! -L "$rootdir/usr/lib/tsukuri/db/$i" ] && ln -sf "$name" "$rootdir/usr/lib/tsukuri/db/$i"
+		done
 	}
 
 	msg "Package installed successfuly"
@@ -898,7 +900,9 @@ tsukuri_remove() {
 	rm -rf "$rootdir/usr/lib/tsukuri/db/$1"
 
 	[ -n "$provides" ] && {
-		for i in $provides; do rm -rf "$rootdir/usr/lib/tsukuri/db/$i"; done
+		for i in $provides; do
+			[ -L "$rootdir/usr/lib/tsukuri/db/$i" ] && rm -rf "$rootdir/usr/lib/tsukuri/db/$i"
+		done
 	}
 
 	msg "Package removed successfuly"
