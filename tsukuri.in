@@ -692,7 +692,7 @@ run_hooks() {
 							grep -q -F "$trigdest" "$rootdir/usr/lib/tsukuri/db/$1/files"  && {
 								if [ -n "$trigcmd" ]; then
 									msg "Running triggers: $trigname"
-									run_scripts "$trigcmd" "$roodir/"
+									run_scripts "$trigcmd" "$rootdir/"
 								fi
 							}
 						fi
@@ -790,11 +790,11 @@ tsukuri_install() {
 	[ "$has_scripts" == "1" ] && {
 		msg "Running pre-install scripts"
 		archive_file_stdout "$pkg" ".INSTALL" >> "$rootdir/.INSTALL"
-		run_scripts "$sh /.INSTALL pre-install" "$roodir/"
+		run_scripts "$sh /.INSTALL pre-install" "$rootdir/"
 	}
 
 	msg "Extracting package on filesystem"
-	pushd "$roodir/"
+	pushd "$rootdir/"
 		lzip -cd "$pkg" | bsdcpio -id
 	popd
 
@@ -808,7 +808,7 @@ tsukuri_install() {
 	[ "$has_scripts" == "1" ] && {
 		msg "Running post-install scripts"
 		[ ! -f "$rootdir/.INSTALL" ] && archive_file_stdout "$pkg" ".INSTALL" >> "$rootdir/.INSTALL"
-		run_scripts "$sh /.INSTALL post-install" "$roodir/"
+		run_scripts "$sh /.INSTALL post-install" "$rootdir/"
 	}
 
 	[ -n "$backup" ] && {
@@ -864,7 +864,7 @@ tsukuri_remove() {
 
 	[ "$has_scripts" == "1" ] && {
 		msg "Running pre-remove scripts"
-		run_scripts "$sh /.INSTALL pre-remove" "$roodir/"
+		run_scripts "$sh /.INSTALL pre-remove" "$rootdir/"
 	}
 
 	[ -n "$backup" ] && {
@@ -895,7 +895,7 @@ tsukuri_remove() {
 
 	[ "$has_scripts" == "1" ] && {
 		msg "Running post-remove scripts"
-		run_scripts "$sh /.INSTALL post-remove" "$roodir/"
+		run_scripts "$sh /.INSTALL post-remove" "$rootdir/"
 	}
 
 	msg "Updating package database"
