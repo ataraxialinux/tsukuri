@@ -977,7 +977,6 @@ get_depends() {
 	[ -n "$privdepends" ] && {
 		for i in $(echo $privdepends | tr ' ' '\n'); do
 			if ! echo $deps | tr ' ' '\n' | grep -qx "$i"; then
-				[ "$i" == "systemd" ] && return
 				soft="1" get_portdir $i &>/dev/null || die 'Package called `'${i}'` does not exist but required for another package.'
 				if [ "$2" != "upgrade" ]; then
 					is_installed $i
