@@ -70,7 +70,15 @@ EOF
 }
 
 tsukuri_version() {
-	echo "VERSION"
+cat <<EOF
+tsukuri version $version
+
+Copyright (c) 2016-2020 Ataraxia Linux
+
+This software is licensed under ISC license.
+For further information: https://www.isc.org/licenses/
+
+EOF
 
 	exit 0
 }
