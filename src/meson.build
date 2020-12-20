@@ -7,12 +7,12 @@ send_to_journal_src = [
 	'send-to-journal.c'
 ]
 
-executable('vercmp', vercmp_src)
+executable('vercmp', vercmp_src, install: true, install_dir: bindir)
 
 if get_option('systemd')
-	executable('send-to-journal', send_to_journal_src, dependencies: systemd_dep)
+	executable('send-to-journal', send_to_journal_src, dependencies: systemd_dep, install: true, install_dir: bindir)
 else
-	executable('send-to-journal', send_to_journal_src)
+	executable('send-to-journal', send_to_journal_src, install: true, install_dir: bindir)
 endif
 
 verconf = configuration_data()
