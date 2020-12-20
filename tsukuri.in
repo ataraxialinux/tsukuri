@@ -66,19 +66,6 @@ check_root() {
 	fi
 }
 
-check_selinux() {
-	if ! type selinuxenabled &>/dev/null; then
-		return 1
-	fi
-
-	selinuxenabled
-	if test $? -ne 0; then
-		return 1
-	else
-		return 0
-	fi
-}
-
 export_config() {
 	[ ! -f "$1" ] && die "Config file is not specified or not found."
 
@@ -547,12 +534,6 @@ compress_package() {
 
 		[ -f "$topdir/install" ] && install -Dm755 "$topdir/install" "$PKG/.INSTALL"
 		[ -f "$topdir/trigger" ] && install -Dm644 "$topdir/trigger" "$PKG/usr/lib/tsukuri/triggers/${name}.trigger"
-
-		check_selinux
-		if test $? -eq 0; then
-			msg "Relabeling package contents"
-			restorecon -R "$PKG"/
-		fi
 
 		msg "Compressing package"
 		find . | bsdcpio --quiet -H newc -o | lzip -9 -o "$tgt2" -
