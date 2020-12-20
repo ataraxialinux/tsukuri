@@ -691,12 +691,9 @@ list_uninstall() {
 
 run_scripts() {
 	[ -z "$1" ] && exit 1
+	[ -z "$2" ] && exit 1
 
-	if [ "$2" != "/" ]; then
-		unshare --pid --fork --cgroup --mount --net --mount-proc --root="$2" $1
-	else
-		unshare --pid --fork --cgroup --mount --net --mount-proc $1
-	fi
+	chroot "$2" $1
 }
 
 run_hooks() {
@@ -1277,7 +1274,7 @@ main() {
 			S) noscripts="yes" ;;
 			H) nohooks="yes" ;;
 			k) number="yes" ;;
-			\?) usage ;;
+			\?) tsukuri_usage ;;
 		esac
 	done
 	shift $((OPTIND -1))
