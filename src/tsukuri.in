@@ -718,9 +718,11 @@ tsukuri_install() {
 
 	if is_installed "$name"; then
 		msg "Upgrading package: $name"
+		send-to-journal "$i: upgrading package"
 		update="1"
 	else
 		msg "Installing package: $name"
+		send-to-journal "$i: installing package"
 		update="0"
 	fi
 
@@ -820,6 +822,7 @@ tsukuri_install() {
 	}
 
 	msg "Package installed successfuly"
+	send-to-journal "$name: package installing successfuly"
 	trap INT
 }
 
@@ -833,6 +836,7 @@ tsukuri_remove() {
 	is_installed $1 || die "Package not installed."
 
 	msg "Removing package: $1"
+	send-to-journal "$i: removing package"
 
 	trap "" INT
 	provides="$(cat $rootdir/usr/lib/tsukuri/db/$1/pkginfo | grep -w 'provides =' | sed 's/provides = //' | tr '\n' ' ')"
@@ -889,6 +893,7 @@ tsukuri_remove() {
 	}
 
 	msg "Package removed successfuly"
+	send-to-journal "$1: package removed successfuly"
 	trap INT
 }
 
@@ -1067,6 +1072,8 @@ tsukuri_upgrade() {
 		return 0
 	}
 
+	send-to-journal "Starting system upgrade"
+
 	msg "Resolving dependencies"
 	for i in $array; do
 		get_depends $i "upgrade"
@@ -1095,6 +1102,7 @@ tsukuri_upgrade() {
 	done
 
 	msg "System has been upgraded successfuly."
+	send-to-journal "System has been upgraded successfuly."
 }
 
 tsukuri_info() {
