@@ -692,7 +692,7 @@ list_uninstall() {
 run_scripts() {
 	[ -z "$1" ] && exit 1
 
-	if [ -n "$2" ]; then
+	if [ "$2" != "/" ]; then
 		unshare --pid --fork --cgroup --mount --net --mount-proc --root="$2" $1
 	else
 		unshare --pid --fork --cgroup --mount --net --mount-proc $1
@@ -706,7 +706,9 @@ run_hooks() {
 			for triggers in "$rootdir/usr/lib/tsukuri/triggers/"*.trigger; do
 				trigname="$(jq -r '.trigger.name' $triggers)"
 				trigdest="$(jq -r '.trigger.directory[]' $triggers)"
-				trigdestexist="$(jq -r '.trigger.directories_exist[]' $triggers)"
+				if [ -n "$(cat $triggers | grep -w 'directories_exist')" ]; then
+					trigdestexist="$(jq -r '.trigger.directories_exist[]' $triggers)"
+				fi
 				trigcmd="$(jq -r '.trigger.command' $triggers)"
 
 				if [ -n "$trigname" ] && [ -n "$trigdest" ]; then
