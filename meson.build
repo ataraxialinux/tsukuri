@@ -5,6 +5,10 @@ project('tsukuri', 'c',
 	default_options : ['c_std=c18']
 )
 
+prefix = get_option('prefix')
+bindir = join_paths(prefix, get_option('bindir'))
+mandir = join_paths(prefix, get_option('mandir'))
+
 cc = meson.get_compiler('c')
 bash = find_program('bash')
 bsdcpio = find_program('bsdcpio')

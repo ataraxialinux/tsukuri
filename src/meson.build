@@ -14,3 +14,12 @@ if get_option('systemd')
 else
 	executable('send-to-journal', send_to_journal_src)
 endif
+
+verconf = configuration_data()
+verconf.set('VERSION', '@0@'.format(meson.project_version()))
+configure_file(
+	input: 'tsukuri.in',
+	output: 'tsukuri',
+	configuration: verconf,
+	install_dir: bindir
+)
