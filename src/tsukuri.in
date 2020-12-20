@@ -1022,6 +1022,14 @@ get_depends() {
 				if [ "$2" != "upgrade" ]; then
 					is_installed $i
 					if test $? -ne 0; then
+						if [ -f "$(get_portdir $i)/.circular" ]; then
+							if [ -n "$deps" ]; then
+								deps="$deps $i"
+							else
+								deps="$i"
+							fi
+							continue
+						fi
 						get_depends $i
 						if [ -n "$deps" ]; then
 							deps="$deps $i"
@@ -1083,24 +1091,24 @@ tsukuri_emerge() {
 		fi	
 	done
 
-	if [ "$(echo $deps | wc -w)" -gt "1" ]; then
-		msg "Overall transaction: "
-		for i in $deps; do
-			printf " [\e[0;31mEMERGE\e[0m] $i $(get_portver $i) \n"
-		done
-	fi
+#	if [ "$(echo $deps | wc -w)" -gt "1" ]; then
+#		msg "Overall transaction: "
+#		for i in $deps; do
+#			printf " [\e[0;31mEMERGE\e[0m] $i $(get_portver $i) \n"
+#		done
+#	fi
 
-	for i in $deps; do
-		pushd "$(get_portdir $i)"
-			(
-				noclean="no" topdir="$PWD" tsukuri_build
-				tsukuri_install
-			)
-			if test $? -ne 0; then
-				die  "Failed to emerge package: $i"
-			fi
-		popd
-	done
+#	for i in $deps; do
+#		pushd "$(get_portdir $i)"
+#			(
+#				noclean="no" topdir="$PWD" tsukuri_build
+#				tsukuri_install
+#			)
+#			if test $? -ne 0; then
+#				die  "Failed to emerge package: $i"
+#			fi
+#		popd
+#	done
 }
 
 list_packages() {
