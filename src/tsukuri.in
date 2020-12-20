@@ -706,7 +706,7 @@ run_hooks() {
 			for triggers in "$rootdir/usr/lib/tsukuri/triggers/"*.trigger; do
 				trigname="$(jq -r '.trigger.name' $triggers)"
 				trigdest="$(jq -r '.trigger.directory[]' $triggers)"
-				trigdestexist="$(jq -r '.trigger.directories-exist[]' $triggers)"
+				trigdestexist="$(jq -r '.trigger.directories_exist[]' $triggers)"
 				trigcmd="$(jq -r '.trigger.command' $triggers)"
 
 				if [ -n "$trigname" ] && [ -n "$trigdest" ]; then
