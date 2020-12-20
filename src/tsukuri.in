@@ -1086,7 +1086,7 @@ tsukuri_emerge() {
 		pushd "$(get_portdir $i)"
 			(
 				noclean="no" topdir="$PWD" tsukuri_build
-				nohooks="yes" tsukuri_install
+				tsukuri_install
 			)
 			if test $? -ne 0; then
 				die  "Failed to emerge package: $i"
@@ -1140,7 +1140,7 @@ tsukuri_upgrade() {
 		pushd "$(get_portdir $i)"
 			(
 				noclean="no" topdir="$PWD" tsukuri_build
-				nohooks="yes" force="no" needed="no" tsukuri_install
+				force="no" needed="no" tsukuri_install
 			)
 			if test $? -ne 0; then
 				die  "Failed to upgrade package: $i"
