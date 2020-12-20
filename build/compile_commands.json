@@ -1,0 +1,20 @@
+[
+  {
+    "directory": "/home/yuyu/junk/tsukuri/build",
+    "command": "ccache cc -Isrc/vercmp.p -Isrc -I../src -fdiagnostics-color=always -pipe -D_FILE_OFFSET_BITS=64 -Wall -Winvalid-pch -std=c18 -g -DSYSTEMD -MD -MQ src/vercmp.p/dewey.c.o -MF src/vercmp.p/dewey.c.o.d -o src/vercmp.p/dewey.c.o -c ../src/dewey.c",
+    "file": "../src/dewey.c",
+    "output": "src/vercmp.p/dewey.c.o"
+  },
+  {
+    "directory": "/home/yuyu/junk/tsukuri/build",
+    "command": "ccache cc -Isrc/vercmp.p -Isrc -I../src -fdiagnostics-color=always -pipe -D_FILE_OFFSET_BITS=64 -Wall -Winvalid-pch -std=c18 -g -DSYSTEMD -MD -MQ src/vercmp.p/vercmp.c.o -MF src/vercmp.p/vercmp.c.o.d -o src/vercmp.p/vercmp.c.o -c ../src/vercmp.c",
+    "file": "../src/vercmp.c",
+    "output": "src/vercmp.p/vercmp.c.o"
+  },
+  {
+    "directory": "/home/yuyu/junk/tsukuri/build",
+    "command": "ccache cc -Isrc/send-to-journal.p -Isrc -I../src -fdiagnostics-color=always -pipe -D_FILE_OFFSET_BITS=64 -Wall -Winvalid-pch -std=c18 -g -DSYSTEMD -MD -MQ src/send-to-journal.p/send-to-journal.c.o -MF src/send-to-journal.p/send-to-journal.c.o.d -o src/send-to-journal.p/send-to-journal.c.o -c ../src/send-to-journal.c",
+    "file": "../src/send-to-journal.c",
+    "output": "src/send-to-journal.p/send-to-journal.c.o"
+  }
+]

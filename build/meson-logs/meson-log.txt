@@ -1,0 +1,98 @@
+Build started at 2020-12-21T01:04:31.547730
+Main binary: /usr/bin/python3
+Build Options: -Dbackend=ninja
+Python system: Linux
+The Meson build system
+Version: 0.55.3
+Source dir: /home/yuyu/junk/tsukuri
+Build dir: /home/yuyu/junk/tsukuri/build
+Build type: native build
+None of 'PKG_CONFIG_PATH' are defined in the environment, not changing global flags.
+None of 'PKG_CONFIG_PATH' are defined in the environment, not changing global flags.
+Project name: tsukuri
+Project version: 0.1.2
+C compiler for the build machine: ccache cc (gcc 10.2.1 "cc (GCC) 10.2.1 20201125 (Red Hat 10.2.1-9)")
+C linker for the build machine: cc ld.bfd 2.35-15
+None of 'AR' are defined in the environment, not changing global flags.
+C compiler for the host machine: ccache cc (gcc 10.2.1 "cc (GCC) 10.2.1 20201125 (Red Hat 10.2.1-9)")
+C linker for the host machine: cc ld.bfd 2.35-15
+None of 'AR' are defined in the environment, not changing global flags.
+Build machine cpu family: x86_64
+Build machine cpu: x86_64
+Host machine cpu family: x86_64
+Host machine cpu: x86_64
+Target machine cpu family: x86_64
+Target machine cpu: x86_64
+Program bash found: YES
+Program bsdcpio found: YES
+Program curl found: YES
+Program jq found: YES
+Program lzip found: YES
+Using cached compile:
+Cached command line:  ccache cc /home/yuyu/junk/tsukuri/build/meson-private/tmpvd7_atni/testfile.c -o /home/yuyu/junk/tsukuri/build/meson-private/tmpvd7_atni/output.obj -pipe -c -D_FILE_OFFSET_BITS=64 -O0 -Wall 
+
+Code:
+ extern int i;
+int i;
+
+Cached compiler stdout:
+ 
+Cached compiler stderr:
+ 
+Compiler for C supports arguments -Wall: YES (cached)
+Using cached compile:
+Cached command line:  ccache cc /home/yuyu/junk/tsukuri/build/meson-private/tmpvcv34i8o/testfile.c -o /home/yuyu/junk/tsukuri/build/meson-private/tmpvcv34i8o/output.obj -pipe -c -D_FILE_OFFSET_BITS=64 -O0 -Wextra 
+
+Code:
+ extern int i;
+int i;
+
+Cached compiler stdout:
+ 
+Cached compiler stderr:
+ 
+Compiler for C supports arguments -Wextra: YES (cached)
+Using cached compile:
+Cached command line:  ccache cc /home/yuyu/junk/tsukuri/build/meson-private/tmprhk_x0dd/testfile.c -o /home/yuyu/junk/tsukuri/build/meson-private/tmprhk_x0dd/output.obj -pipe -c -D_FILE_OFFSET_BITS=64 -O0 -Wpedantic 
+
+Code:
+ extern int i;
+int i;
+
+Cached compiler stdout:
+ 
+Cached compiler stderr:
+ 
+Compiler for C supports arguments -Wpedantic: YES (cached)
+Using cached compile:
+Cached command line:  ccache cc /home/yuyu/junk/tsukuri/build/meson-private/tmpscq1buoi/testfile.c -o /home/yuyu/junk/tsukuri/build/meson-private/tmpscq1buoi/output.obj -pipe -c -D_FILE_OFFSET_BITS=64 -O0 -Werror 
+
+Code:
+ extern int i;
+int i;
+
+Cached compiler stdout:
+ 
+Cached compiler stderr:
+ 
+Compiler for C supports arguments -Werror: YES (cached)
+Dependency libsystemd found: YES 246 (cached)
+Configuring tsukuri using configuration
+Build targets in project: 2
+
+Found ninja-1.10.1 at /usr/bin/ninja
+Running compile:
+Working directory:  /home/yuyu/junk/tsukuri/build/meson-private/tmpsbak8fwu
+Command line:  ccache cc /home/yuyu/junk/tsukuri/build/meson-private/tmpsbak8fwu/testfile.c -o /home/yuyu/junk/tsukuri/build/meson-private/tmpsbak8fwu/output.obj -pipe -c -D_FILE_OFFSET_BITS=64 -O0 --print-search-dirs 
+
+Code:
+ 
+Compiler stdout:
+ install: /usr/lib/gcc/x86_64-redhat-linux/10/
+programs: =/usr/libexec/gcc/x86_64-redhat-linux/10/:/usr/libexec/gcc/x86_64-redhat-linux/10/:/usr/libexec/gcc/x86_64-redhat-linux/:/usr/lib/gcc/x86_64-redhat-linux/10/:/usr/lib/gcc/x86_64-redhat-linux/:/usr/lib/gcc/x86_64-redhat-linux/10/../../../../x86_64-redhat-linux/bin/x86_64-redhat-linux/10/:/usr/lib/gcc/x86_64-redhat-linux/10/../../../../x86_64-redhat-linux/bin/
+libraries: =/usr/lib/gcc/x86_64-redhat-linux/10/:/usr/lib/gcc/x86_64-redhat-linux/10/../../../../x86_64-redhat-linux/lib/x86_64-redhat-linux/10/:/usr/lib/gcc/x86_64-redhat-linux/10/../../../../x86_64-redhat-linux/lib/../lib64/:/usr/lib/gcc/x86_64-redhat-linux/10/../../../x86_64-redhat-linux/10/:/usr/lib/gcc/x86_64-redhat-linux/10/../../../../lib64/:/lib/x86_64-redhat-linux/10/:/lib/../lib64/:/usr/lib/x86_64-redhat-linux/10/:/usr/lib/../lib64/:/usr/lib/gcc/x86_64-redhat-linux/10/../../../../x86_64-redhat-linux/lib/:/usr/lib/gcc/x86_64-redhat-linux/10/../../../:/lib/:/usr/lib/
+
+Compiler stderr:
+ 
+None of 'STRIP' are defined in the environment, not changing global flags.
+None of 'STRIP' are defined in the environment, not changing global flags.
