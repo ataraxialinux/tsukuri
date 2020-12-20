@@ -936,6 +936,8 @@ tsukuri_remove() {
 		run_scripts "$sh /.INSTALL post-remove" "$rootdir/"
 	}
 
+	[ "$nohooks" != "yes" ] && run_hooks "$1"
+
 	msg "Updating package database"
 	rm -rf "$rootdir/usr/lib/tsukuri/db/$1"
 
