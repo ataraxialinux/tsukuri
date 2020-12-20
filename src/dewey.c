@@ -99,23 +99,6 @@ const test_t	modifiers[] = {
 	{	NULL,		0,	0	}
 };
 
-
-
-/* locate the test in the tests array */
-static int
-dewey_mktest(int *op, const char *test)
-{
-	const test_t *tp;
-
-	for (tp = tests ; tp->s ; tp++) {
-		if (strncasecmp(test, tp->s, tp->len) == 0) {
-			*op = tp->t;
-			return tp->len;
-		}
-	}
-	return -1;
-}
-
 /*
  * make a component of a version number.
  * '.' encodes as Dot which is '0'
