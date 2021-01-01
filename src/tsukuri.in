@@ -945,7 +945,7 @@ tsukuri_remove() {
 
 	[ -n "$provides" ] && {
 		for i in $provides; do
-			[ -L "$rootdir/usr/lib/tsukuri/db/$i" ] && rm -rf "$rootdir/usr/lib/tsukuri/db/$i"
+			[ -L "$rootdir/usr/lib/tsukuri/db/$i" ] && rm "$rootdir/usr/lib/tsukuri/db/$i"
 		done
 	}
 
@@ -1143,7 +1143,7 @@ tsukuri_upgrade() {
 
 	msg "Overall transaction: "
 	for i in $deps; do
-		printf "[\e[0;34mUPGRADE\e[0m] $i from $(get_instver $i) to $(get_portver $i) \n"
+		printf "[\e[0;32mUPGRADE\e[0m] $i from $(get_instver $i) to $(get_portver $i) \n"
 	done
 
 	for i in $deps; do
