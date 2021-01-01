@@ -73,7 +73,7 @@ tsukuri_version() {
 cat <<EOF
 tsukuri version $version
 
-Copyright (c) 2016-2020 Ataraxia Linux
+Copyright (c) 2016-2021 Ataraxia Linux
 
 This software is licensed under ISC license.
 For further information: https://www.isc.org/licenses/
