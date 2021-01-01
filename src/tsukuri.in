@@ -1143,7 +1143,12 @@ tsukuri_upgrade() {
 
 	msg "Overall transaction: "
 	for i in $deps; do
-		printf "[\e[0;32mUPGRADE\e[0m] $i from $(get_instver $i) to $(get_portver $i) \n"
+		get_instver $i &>/dev/null;
+		if test $? -ne 0; then
+			printf "[\e[0;32mUPGRADE\e[0m] $i to $(get_portver $i) \n"
+		else
+			printf "[\e[0;32mUPGRADE\e[0m] $i from $(get_instver $i) to $(get_portver $i) \n"
+		fi
 	done
 
 	for i in $deps; do
