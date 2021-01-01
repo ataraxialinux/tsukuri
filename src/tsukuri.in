@@ -718,11 +718,11 @@ run_hooks() {
 				if [ -n "$trigname" ] && [ -n "$trigdest" ]; then
 					[ -n "$trigdestexist" ] && {
 						for a in $trigdestexist; do
-							[ ! -d "$a" ] && return 0
+							[ ! -d "${rootdir}${a}" ] && return 0
 						done
 					}
 					for a in $trigdest; do
-						if [ -f "$files" ]; then
+						if [ -f "${rootdir}${files}" ]; then
 							grep -q -F "$trigdest" "$files"  && {
 								if [ -n "$trigcmd" ]; then
 									msg "Running triggers: $trigname"
