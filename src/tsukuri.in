@@ -862,11 +862,11 @@ tsukuri_install() {
 	[ "$nohooks" != "yes" ] && run_hooks "$name"
 
 	msg "Updating package database"
-	install -Dm644 "$rootdir/.PKGINFO" "$rootdir/usr/lib/tsukuri/db/$name/pkginfo"
 	[ -f "$rootdir/.FILES" ] && install -Dm644 "$rootdir/.FILES" "$rootdir/usr/lib/tsukuri/db/$name/files"
 	[ -f "$rootdir/.INSTALL" ] && install -Dm755 "$rootdir/.INSTALL" "$rootdir/usr/lib/tsukuri/db/$name/install"
 	[ -f "$rootdir/usr/lib/tsukuri/db/$name/pkginfo" ] && rm -rf "$rootdir/usr/lib/tsukuri/db/$name/pkginfo"
 
+	archive_file_stdout "$pkg" ".PKGINFO" >> "$rootdir/usr/lib/tsukuri/db/$name/pkginfo"
 	rm -rf "$rootdir/.FILES" "$rootdir/.INSTALL" "$rootdir/.PKGINFO"
 
 	provides="$(archive_file_stdout "$pkg" ".PKGINFO" | grep -w 'provides =' | sed 's/provides = //' | tr '\n' ' ')"
