@@ -375,6 +375,77 @@ setup_compiler() {
 	fi
 }
 
+all-flag-vars() {
+	echo {ADA,C,CPP,CXX,CCAS,F,FC,LD}FLAGS
+}
+
+filter-flags() {
+	local v
+	for v in $(all-flag-vars) ; do
+		_filter-var ${v} "$@"
+	done
+	return 0
+}
+
+append-cppflags() {
+	[[ $# -eq 0 ]] && return 0
+	export CPPFLAGS+=" $*"
+	return 0
+}
+
+append-cflags() {
+	[[ $# -eq 0 ]] && return 0
+	export CFLAGS+=" $*"
+	return 0
+}
+
+append-cxxflags() {
+	[[ $# -eq 0 ]] && return 0
+	export CXXFLAGS+=" $*"
+	return 0
+}
+
+append-ldflags() {
+	[[ $# -eq 0 ]] && return 0
+	local flag
+	for flag in "$@"; do
+		[[ ${flag} == -l* ]] && \
+			eqawarn "Appending a library link instruction (${flag}); libraries to link to should not be passed through LDFLAGS"
+	done
+
+	export LDFLAGS="${LDFLAGS} $*"
+	return 0
+}
+
+append-flags() {
+	[[ $# -eq 0 ]] && return 0
+	case " $* " in
+	*' '-[DIU]*) warn 'please use append-cppflags for preprocessor flags' ;;
+	*' '-L*|\
+	*' '-Wl,*)  warn 'please use append-ldflags for linker flags' ;;
+	esac
+	append-cflags "$@"
+	append-cxxflags "$@"
+	append-fflags "$@"
+	return 0
+}
+
+replace-flags() {
+	[[ $# != 2 ]] && die "Usage: replace-flags <old flag> <new flag>"
+
+	local f var new
+	for var in $(all-flag-vars) ; do
+		new=()
+		for f in ${!var} ; do
+			[[ ${f} == ${1} ]] && f=${2}
+			new+=( "${f}" )
+		done
+		export ${var}="${new[*]}"
+	done
+
+	return 0
+}
+
 build_package() {
 	local use_ccache="0"
 
@@ -834,7 +905,7 @@ tsukuri_install() {
 
 	msg "Extracting package on filesystem"
 	pushd "$rootdir/"
-		bsdcpio -id "$pkg"
+		bsdcpio -id < "$pkg"
 	popd
 
 	if [ -f "$rootdir/usr/lib/tsukuri/db/$name/files" ]; then
