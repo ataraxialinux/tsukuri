@@ -14,7 +14,7 @@ bash = find_program('bash')
 bsdcpio = find_program('bsdcpio')
 curl = find_program('curl')
 jq = find_program('jq')
-lzip = find_program('lzip')
+lzip = find_program('zstd')
 
 c_args = [
 	'-Wall',
