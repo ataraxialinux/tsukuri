@@ -379,6 +379,20 @@ all-flag-vars() {
 	echo {ADA,C,CPP,CXX,CCAS,F,FC,LD}FLAGS
 }
 
+_filter-var() {
+	local f x var=$1 new=()
+	shift
+
+	for f in ${!var} ; do
+		for x in "$@" ; do
+			[[ ${f} == ${x} ]] && continue 2
+		done
+		new+=( "${f}" )
+	done
+	export ${var}="${new[*]}"
+}
+
+
 filter-flags() {
 	local v
 	for v in $(all-flag-vars) ; do
