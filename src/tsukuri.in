@@ -588,7 +588,11 @@ build_package() {
 }
 
 compress_package() {
-	local i maint getdir stateless_file
+	local i maint getdir stateless_file threads
+
+	if [ -n "$(nproc)" ]; then
+		threads="-T$(nproc)"
+	fi
 
 	pushd "$PKG"
 		msg "Generating package metadata"
@@ -667,7 +671,7 @@ compress_package() {
 		[ -f "$topdir/trigger" ] && install -Dm644 "$topdir/trigger" "$PKG/usr/lib/tsukuri/triggers/${name}.trigger"
 
 		msg "Compressing package"
-		find . | bsdcpio --quiet -H newc -o | zstd -19 > "$tgt"
+		find . | bsdcpio --quiet -H newc -o | zstd $threads -19 > "$tgt"
 		if test $? -ne 0; then
 			[ "$noclean" != "yes" ] && rm -rf "$WORK"
 			die  "Failed to compress package."
