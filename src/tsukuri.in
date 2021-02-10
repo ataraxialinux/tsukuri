@@ -366,12 +366,12 @@ setup_compiler() {
 	if [ -n "$CC" ]; then
 		MYCC="$CC"
 	else
-		MYCC="gcc"
+		MYCC="clang"
 	fi
 	if [ -n "$CXX" ]; then
 		MYCXX="$CXX"
 	else
-		MYCXX="g++"
+		MYCXX="clang++"
 	fi
 }
 
@@ -484,12 +484,12 @@ build_package() {
 				if [ -f "$ccache_path/${CC}" ]; then
 					MYCC="$ccache_path/${CC}"
 				else
-					MYCC="$ccache_path/gcc"
+					MYCC="$ccache_path/clang"
 				fi
 				if [ -f "$ccache_path/${CXX}" ]; then
 					MYCXX="$ccache_path/${CXX}"
 				else
-					MYCXX="$ccache_path/g++"
+					MYCXX="$ccache_path/clang++"
 				fi
 			else
 				setup_compiler
