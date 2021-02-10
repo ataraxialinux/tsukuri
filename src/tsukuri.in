@@ -836,6 +836,8 @@ tsukuri_install() {
 		pkg="$1"
 	fi
 
+	pkg="$(realpath $pkg)"
+
 	[ ! -f "$pkg" ] && die "Package was not specified or not found."
 
 	msg "Checking package"
