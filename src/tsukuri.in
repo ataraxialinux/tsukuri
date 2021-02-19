@@ -692,7 +692,7 @@ tsukuri_build() {
 	[ -z "$pkgdest" ] && pkgdest="$topdir"
 	[ -z "$srcdest" ] && srcdest="$topdir"
 
-	export tgt="$pkgdest/${name}-${version}-${release}.czst"
+	export tgt="$pkgdest/${name}-${version}-${release}.${BARCH}.czst"
 
 	[ "$force" == "yes" ] && rm -rf "$tgt"
 
