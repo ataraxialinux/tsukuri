@@ -790,7 +790,7 @@ run_hooks() {
 	if [ -f "$rootdir/.FILES" ]; then
 		files="$rootdir/.FILES"
 	else
-		file="$rootdir/usr/lib/tsukuri/db/$1/files"
+		files="$rootdir/usr/lib/tsukuri/db/$1/files"
 	fi
 
 	if [ -d "$rootdir/usr/lib/tsukuri/triggers" ]; then
