@@ -949,8 +949,6 @@ tsukuri_install() {
 		run_scripts "$sh /.INSTALL post-install" "$rootdir/"
 	}
 
-	[ "$nohooks" != "yes" ] && run_hooks "$name"
-
 	msg "Updating package database"
 	[ -f "$rootdir/.FILES" ] && install -Dm644 "$rootdir/.FILES" "$rootdir/usr/lib/tsukuri/db/$name/files"
 	[ -f "$rootdir/.INSTALL" ] && install -Dm755 "$rootdir/.INSTALL" "$rootdir/usr/lib/tsukuri/db/$name/install"
@@ -965,6 +963,8 @@ tsukuri_install() {
 			[ ! -L "$rootdir/usr/lib/tsukuri/db/$i" ] && ln -sf "$name" "$rootdir/usr/lib/tsukuri/db/$i"
 		done
 	}
+
+	[ "$nohooks" != "yes" ] && run_hooks "$name"
 
 	msg "Package installed successfuly"
 	send-to-journal "$name: package installing successfuly"

@@ -1,5 +1,5 @@
 project('tsukuri', 'c',
-	version: '0.2.3',
+	version: '0.2.4',
 	meson_version: '>= 0.55.0',
 	license: 'ISC',
 	default_options : ['c_std=c18']
