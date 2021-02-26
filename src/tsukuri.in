@@ -785,7 +785,7 @@ run_scripts() {
 }
 
 run_hooks() {
-	local a triggers trigname trigdest trigdestexist trigcmd files
+	local a triggers trigname trigdest rigcmd files
 
 	if [ -f "$rootdir/.FILES" ]; then
 		files="$rootdir/.FILES"
@@ -798,19 +798,11 @@ run_hooks() {
 			for triggers in "$rootdir/usr/lib/tsukuri/triggers/"*.trigger; do
 				trigname="$(jq -r '.trigger.name' $triggers)"
 				trigdest="$(jq -r '.trigger.directory[]' $triggers)"
-				if [ -n "$(cat $triggers | grep -w 'directories_exist')" ]; then
-					trigdestexist="$(jq -r '.trigger.directories_exist[]' $triggers)"
-				fi
 				trigcmd="$(jq -r '.trigger.command' $triggers)"
 
 				if [ -n "$trigname" ] && [ -n "$trigdest" ]; then
-					[ -n "$trigdestexist" ] && {
-						for a in $trigdestexist; do
-							[ ! -d "${rootdir}${a}" ] && return 0
-						done
-					}
 					for a in $trigdest; do
-						if [ -f "$rootdir/usr/lib/tsukuri/db/$1/files" ]; then
+						if [ -f "$rootdir/usr/lib/tsukuri/db/$1/files" ] && ; then
 							grep -q -F "$trigdest" "$files"  && {
 								if [ -n "$trigcmd" ]; then
 									msg "Running triggers: $trigname"
