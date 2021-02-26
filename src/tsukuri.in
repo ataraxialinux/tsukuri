@@ -802,7 +802,7 @@ run_hooks() {
 
 				if [ -n "$trigname" ] && [ -n "$trigdest" ]; then
 					for a in $trigdest; do
-						if [ -f "$rootdir/usr/lib/tsukuri/db/$1/files" ] && ; then
+						if [ -f "$rootdir/usr/lib/tsukuri/db/$1/files" ]; then
 							grep -q -F "$trigdest" "$files"  && {
 								if [ -n "$trigcmd" ]; then
 									msg "Running triggers: $trigname"
