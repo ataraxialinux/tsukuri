@@ -47,7 +47,6 @@ Operations:
 
 Options for installing and removing packages:
    -N		Don't reinstall package
-   -B		Don't backup or restore packages
    -D		Don't check for dependencies
    -S		Don't run scripts
    -H		Don't run hooks
@@ -166,8 +165,6 @@ parse_options() {
 		case $myopts in
 			nobootstrap) opt_bootstrap="0" ;;
 			~nobootstrap) opt_bootstrap="1" ;;
-			nostateless) opt_stateless="0" ;;
-			~nostateless) opt_stateless="1" ;;
 			ccache) opt_ccache="1" ;;
 			~ccache) opt_ccache="0" ;;
 			docs) opt_docs="1" ;;
@@ -460,6 +457,67 @@ replace-flags() {
 	return 0
 }
 
+check_tmpfile_vars() {
+	local var="$1"
+
+	if [ -z "$var" ] || [ "$var" == "NULL" ]; then
+		echo "-"
+	else
+		echo "$var"
+	fi
+}
+
+prepare_vendor() {
+	local string="$1"
+	local filename="$2"
+	local rootfs="$3"
+	local name source operation mode user group on_boot final extra_dir basename
+
+	[ -z "$string" ] && die "String is not specified."
+	[ -z "$filename" ] && die "Output file is not specified."
+	[ -z "$rootfs" ] && die "Package directory is not specified."
+
+	name="$(echo $string | tr '::' ' ' | awk '{print $1}')"
+	source="$(echo $string | tr '::' ' ' | awk '{print $2}')"
+	operation="$(echo $string | tr '::' ' ' | awk '{print $3}')"
+	mode="$(echo $string | tr '::' ' ' | awk '{print $4}')"
+	user="$(echo $string | tr '::' ' ' | awk '{print $5}')"
+	group="$(echo $string | tr '::' ' ' | awk '{print $6}')"
+	on_boot="$(echo $string | tr '::' ' ' | awk '{print $7}')"
+
+	[ -z "$name" ] && die "Target to create is not specified."
+	[ -z "$operation" ] && die "Operation for target is not specified."
+
+	if [ -z "$source" ]; then
+		case "$operation" in
+			L|C)
+				if [ ! -e "${rootfs}${name}" ]; then
+					die "Vendor preparation error: ${name} does not exist"
+				fi
+
+				basename="$(basename $name)"
+				extra_dir="$(echo $name | sed "s|$basename||")"
+				mkdir -p "${rootfs}/usr/share/factory${extra_dir}"
+
+				mv "${rootfs}${name}" "${rootfs}/usr/share/factory${name}"
+				;;
+		esac
+	fi
+
+	if [ "$on_boot" == "true" ]; then
+		operation="${operation}!"
+	fi
+
+	final="${operation}\t${name}\t$(check_tmpfile_vars $mode) $(check_tmpfile_vars $user) $(check_tmpfile_vars $group)\t-"
+
+	if [ -n "$source" ]; then
+		final="$final\t$(check_tmpfile_vars $source)"
+	fi
+
+	echo -e "$final" >> "$filename"
+	sort "$filename"
+}
+
 build_package() {
 	local use_ccache="0"
 
@@ -633,42 +691,20 @@ compress_package() {
 				echo "obsoletes = $i" >> .PKGINFO
 			done
 		}
-		[ -n "$backup" ] && {
-			for i in ${backup[@]}; do
-				[ ! -f "$PKG/$i" ] && die "File called '${i}' does not exist."
+		[ -n "$factory" ] && {
+			if [ ! -d "$PKG/usr/lib/tmpfiles.d" ]; then
+				mkdir -p "$PKG/usr/lib/tmpfiles.d"
+			fi
 
-				if [ "$opt_stateless" == "1" ]; then
-					stateless_file="$(basename $i)"
-					getdir="$(echo $i | sed "s/$stateless_file/ $stateless_file/" | sed 's,/[^/]*$,,')"
-					
-					mkdir -p usr/lib/tmpfiles.d usr/share/factory/$getdir
-					mv "$PKG"/$i usr/share/factory/$getdir/$stateless_file
-
-					echo "C /${i}" >> usr/lib/tmpfiles.d/stateless-${name}.conf
-				else
-					echo "backup = $i" >> .PKGINFO
-				fi
+			for i in ${factory[@]}; do
+				prepare_vendor "$i" "$PKG/usr/lib/tmpfiles.d/$name.conf" "$PKG"
 			done
 		}
-		if [ "$opt_stateless" == "1" ]; then
-			[ ! -d "$PKG/usr/lib/tmpfiles.d" ] && mkdir -p usr/lib/tmpfiles.d
-
-			[ -n "$makedirs" ] && {
-				for i in "${makedirs[@]}"; do
-					echo "d ${i}" >> usr/lib/tmpfiles.d/setup-${name}.conf
-				done
-			}
-			[ -n "$makelinks" ] && {
-				for i in "${makelinks[@]}"; do
-					echo "L ${i}" >> usr/lib/tmpfiles.d/setup-${name}.conf
-				done
-			}
-
-			rm -rf etc var
-		fi
 
 		[ -f "$topdir/install" ] && install -Dm755 "$topdir/install" "$PKG/.INSTALL"
 		[ -f "$topdir/trigger" ] && install -Dm644 "$topdir/trigger" "$PKG/usr/lib/tsukuri/triggers/${name}.trigger"
+
+		rm -rvf etc var
 
 		msg "Compressing package"
 		find . | bsdcpio --quiet -H newc -o | zstd $threads -19 > "$tgt"
@@ -818,7 +854,7 @@ run_hooks() {
 }
 
 tsukuri_install() {
-	local i pkg name version release update update has_scripts backup obsoletes provides sh
+	local i pkg name version release update update has_scripts obsoletes provides sh
 
 	sh="${SHELL:-"/bin/sh"}"
 
@@ -878,7 +914,6 @@ tsukuri_install() {
 		done
 	fi
 
-	[ "$nobackup" != "yes" ] && backup="$(archive_file_stdout "$pkg" ".PKGINFO" | grep -w 'backup =' | sed 's/backup = //' | tr '\n' ' ')"
 	[ "$nodepends" != "yes" ] && {
 		for i in $(archive_file_stdout "$pkg" ".PKGINFO" | grep -w 'depend =' | sed 's/depend = //' | tr '\n' ' '); do
 			if ! is_installed "$i"; then
@@ -908,13 +943,6 @@ tsukuri_install() {
 		run_scripts "$sh /.INSTALL pre-install" "$rootdir/"
 	}
 
-	[ -n "$backup" ] && {
-		msg "Saving user files for backup"
-		for i in $backup; do
-			[ -f "$rootdir/$i" ] && mv "$rootdir/$i" "$rootdir/$i.save"
-		done
-	}
-
 	msg "Extracting package on filesystem"
 	pushd "$rootdir/"
 		bsdcpio -id < "$pkg"
@@ -924,16 +952,6 @@ tsukuri_install() {
 		msg "Removing old files"
 		list_subtract "$rootdir/usr/lib/tsukuri/db/$name/files" "$rootdir/.FILES" | list_uninstall - || true
 	fi
-
-	[ -n "$backup" ] && {
-		msg "Restoring old user files"
-		for i in $backup; do
-			if [ -f "$rootdir/$i.save" ]; then
-				[ -f "$rootdir/$i" ] && mv "$rootdir/$i" "$rootdir/$i.new"
-				mv "$rootdir/$i.save" "$rootdir/$i"
-			fi
-		done
-	}
 
 	[ "$has_scripts" == "1" ] && {
 		msg "Running post-install scripts"
@@ -964,7 +982,7 @@ tsukuri_install() {
 }
 
 tsukuri_remove() {
-	local has_scripts has_files backup provides sh
+	local has_scripts has_files provides sh
 
 	sh="${SHELL:-"/bin/sh"}"
 
@@ -978,7 +996,6 @@ tsukuri_remove() {
 	trap "" INT
 	provides="$(cat $rootdir/usr/lib/tsukuri/db/$1/pkginfo | grep -w 'provides =' | sed 's/provides = //' | tr '\n' ' ')"
 
-	[ "$nobackup" != "yes" ] && backup="$(cat $rootdir/usr/lib/tsukuri/db/$1/pkginfo | grep -w 'backup =' | sed 's/backup = //' | tr '\n' ' ')"
 	[ "$noscripts" != "yes" ] && {
 		[ -f "$rootdir/usr/lib/tsukuri/db/$1/install" ] && has_scripts="1"
 	}
@@ -989,13 +1006,6 @@ tsukuri_remove() {
 		run_scripts "$sh /.INSTALL pre-remove" "$rootdir/"
 	}
 
-	[ -n "$backup" ] && {
-		msg "Saving user files for backup"
-		for i in $backup; do
-			[ -f "$rootdir/$i" ] && mv "$rootdir/$i" "$rootdir/$i.save"
-		done
-	}
-
 	[ "$has_files" == "1" ] && {
 		msg "Removing files"
 		local dirlist=`grep '/$' "$rootdir/usr/lib/tsukuri/db/$1/files"`
@@ -1004,15 +1014,6 @@ tsukuri_remove() {
 		if [ $? -gt 1 ]; then
 			die "Failed to remove package"
 		fi
-	}
-
-	[ -n "$backup" ] && {
-		msg "Restoring old user files"
-		for i in $backup; do
-			if [ -f "$rootdir/$i.save" ]; then
-				mv "$rootdir/$i.save" "$rootdir/$i"
-			fi
-		done
 	}
 
 	[ "$has_scripts" == "1" ] && {
@@ -1334,7 +1335,6 @@ main() {
 	nopackage="no"
 	nosign="no"
 	needed="no"
-	nobackup="no"
 	nodepends="no"
 	noscripts="no"
 	nohooks="no"
@@ -1353,7 +1353,7 @@ main() {
 		*|help) tsukuri_usage ;;
 	esac
 
-	while getopts c:r:wfedvxbpsNBDSHk opts; do
+	while getopts c:r:wfedvxbpsNDSHk opts; do
 		case $opts in
 			c) config="$(realpath $OPTARG)" ;;
 			r) rootdir="$(realpath $OPTARG)"; rootdir="${rootdir%/}" ;;
@@ -1367,7 +1367,6 @@ main() {
 			p) nopackage="yes" ;;
 			s) nosign="yes" ;;
 			N) needed="yes" ;;
-			B) nobackup="yes" ;;
 			D) nodepends="yes" ;;
 			S) noscripts="yes" ;;
 			H) nohooks="yes" ;;
