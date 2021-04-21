@@ -61,7 +61,7 @@ Options for installing and building packages:"
    -p		Don't create package
    -s		Don't sign package
 
-BUG TRACKER: https://github.com/ataraxialinux/neko/issues
+BUG TRACKER: https://github.com/ataraxialinux/tsukuri/issues
 
 EOF
 
