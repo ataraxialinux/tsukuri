@@ -1,9 +1,9 @@
 # Tsukuri - Simple Package manager for Ataraxia GNU/Linux
 
-> Tsukuri is a package manager written in Bash and uses zstd for compressing packages. It uses special build files called a "KagamiBuild" for compiling packages
+Tsukuri is a package manager written in Bash and uses zstd for compressing packages. It uses special build files called a "KagamiBuild" for compiling packages
 automatedly.
 
-Pros and Cons
+## Pros and Cons
 
 
 # Simple
